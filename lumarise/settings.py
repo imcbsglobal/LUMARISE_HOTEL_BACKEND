@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-+44^09@lx=6$oj!j8rwez)2ll@*yk)hlw5uv1tu3@_#o^*fe3r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["lumarisehotel.com","www.lumarisehotel.com"]
 
 
 # Application definition
@@ -85,7 +85,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'LUMARISE_DB',
         'USER': 'postgres',
-        'PASSWORD': '12345',
+        'PASSWORD': 'info@imc',
         'HOST': 'localhost',
         'PORT': '5432',
     }
