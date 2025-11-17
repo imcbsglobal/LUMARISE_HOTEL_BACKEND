@@ -9,6 +9,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["lumarisehotel.com", "www.lumarisehotel.com", "127.0.0.1", "localhost"]
 
+
+# gfhbj
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
