@@ -65,9 +65,9 @@ WSGI_APPLICATION = 'lumarise.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'LUMARISE_DB',
+        'NAME': 'lumarise_db',
         'USER': 'postgres',
-        'PASSWORD': '12345',
+        'PASSWORD': 'info@imc',
         'HOST': 'localhost',
         'PORT': '5432',
     }
