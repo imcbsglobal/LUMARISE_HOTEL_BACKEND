@@ -62,27 +62,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'lumarise.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'lumarise_db',
-#         'USER': 'postgres',
-#         'PASSWORD': 'info@imc',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'LUMARISE_DB',
+        'NAME': 'lumarise_db',
         'USER': 'postgres',
-        'PASSWORD': '12345',
+        'PASSWORD': 'info@imc',
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'LUMARISE_DB',
+#         'USER': 'postgres',
+#         'PASSWORD': '12345',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -97,34 +97,22 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 USE_TZ = True
-
-# STATIC_URL = '/static/'
-# STATIC_ROOT = BASE_DIR / "static"
-
-# MEDIA_URL = '/media/'
-# MEDIA_ROOT = BASE_DIR / "media"
-
-
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Cloudflare R2 Storage Configuration
+# ❗REMOVE MEDIA_ROOT completely
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 CLOUDFLARE_R2_ENABLED = os.getenv('CLOUDFLARE_R2_ENABLED', 'false').lower() == 'true'
 
 if CLOUDFLARE_R2_ENABLED:
-    # R2 Credentials
     AWS_ACCESS_KEY_ID = os.getenv('CLOUDFLARE_R2_ACCESS_KEY')
     AWS_SECRET_ACCESS_KEY = os.getenv('CLOUDFLARE_R2_SECRET_KEY')
-    
-    # R2 Configuration
+
     CLOUDFLARE_R2_BUCKET_NAME = os.getenv('CLOUDFLARE_R2_BUCKET')
     CLOUDFLARE_R2_ENDPOINT = os.getenv('CLOUDFLARE_R2_BUCKET_ENDPOINT')
     CLOUDFLARE_R2_PUBLIC_URL = os.getenv('CLOUDFLARE_R2_PUBLIC_URL')
-    CLOUDFLARE_R2_ACCOUNT_ID = os.getenv('CLOUDFLARE_R2_ACCOUNT_ID', '')
 
-    
-    # Django 5.x STORAGES setting (replaces DEFAULT_FILE_STORAGE)
     STORAGES = {
         "default": {
             "BACKEND": "lumarise.storage.R2MediaStorage",
@@ -133,15 +121,10 @@ if CLOUDFLARE_R2_ENABLED:
             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         },
     }
-    
-    # Media files URL
-    if CLOUDFLARE_R2_PUBLIC_URL:
-        MEDIA_URL = f'{CLOUDFLARE_R2_PUBLIC_URL}/media/'
-        # STATIC_URL = f'{CLOUDFLARE_R2_PUBLIC_URL}/static/'
-    else:
-        MEDIA_URL = f'{CLOUDFLARE_R2_ENDPOINT}/{CLOUDFLARE_R2_BUCKET_NAME}/media/'
+
+    MEDIA_URL = f"{CLOUDFLARE_R2_PUBLIC_URL}/media/"
+
 else:
-    # Local storage fallback
     STORAGES = {
         "default": {
             "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -151,7 +134,6 @@ else:
         },
     }
     MEDIA_URL = '/media/'
-
 
 # CORS
 CORS_ALLOWED_ORIGINS = [

@@ -174,12 +174,28 @@ def login_view(request):
     
 from .models import MediaItem
 from .serializers import MediaItemSerializer
+from .utils import compress_image   # ADD THIS IMPORT
 
 class MediaItemViewSet(viewsets.ModelViewSet):
     queryset = MediaItem.objects.all().order_by('-uploaded_at')
     serializer_class = MediaItemSerializer
 
+    def perform_create(self, serializer):
+        instance = serializer.save()
 
+        # Apply compression for image uploads
+        if instance.media_type == "image" and instance.image:
+            compressed = compress_image(instance.image)
+            instance.image.save(compressed.name, compressed, save=True)
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+
+        # Apply compression when editing image
+        if instance.media_type == "image" and instance.image:
+            compressed = compress_image(instance.image)
+            instance.image.save(compressed.name, compressed, save=True)
+        
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Booking

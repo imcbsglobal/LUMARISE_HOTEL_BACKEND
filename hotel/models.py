@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from datetime import date
+from .utils import compress_image
 
 # ===== Rooms (BookManagement.jsx) =====
 class Room(models.Model):
@@ -15,6 +16,11 @@ class Room(models.Model):
     # Single representative image
     main_image = models.ImageField(upload_to="rooms/", null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        if self.main_image:
+            self.main_image = compress_image(self.main_image)
+        super().save(*args, **kwargs)
+
     # Store multiple images (related via foreign key)
     # You’ll need to create a secondary model for this:
     def __str__(self):
@@ -27,6 +33,12 @@ class RoomImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.room.title}"
+    
+    def save(self, *args, **kwargs):
+        if self.image:
+            self.image = compress_image(self.image)
+        super().save(*args, **kwargs)
+
 
 # ===== Online bookings =====
 class Booking(models.Model):
@@ -170,7 +182,11 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.name
-
+    
+    def save(self, *args, **kwargs):
+        if self.avatar:
+            self.avatar = compress_image(self.avatar)
+        super().save(*args, **kwargs)
 
 # ===== Testimonials =====
 class Testimonial(models.Model):
@@ -186,6 +202,11 @@ class Testimonial(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.rating})"
+    
+    def save(self, *args, **kwargs):
+        if self.avatar:
+            self.avatar = compress_image(self.avatar)
+        super().save(*args, **kwargs)
 
 
 # ===== Video Gallery =====
@@ -203,6 +224,11 @@ class VideoItem(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        if self.thumbnail:
+            self.thumbnail = compress_image(self.thumbnail)
+        super().save(*args, **kwargs)
 
 
 class MediaItem(models.Model):
@@ -219,3 +245,9 @@ class MediaItem(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.media_type})"
+    
+    def save(self, *args, **kwargs):
+        if self.media_type == "image" and self.image:
+            self.image = compress_image(self.image)
+        super().save(*args, **kwargs)
+
